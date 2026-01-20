@@ -15,7 +15,7 @@ using p2 = pair<ll, ll>;
 
 #define all(x) begin(x),end(x)
 
-//Hello
+//Still too slow
 
 int main() {
     ios::sync_with_stdio(0);
@@ -24,42 +24,69 @@ int main() {
     ll n, q;
     cin >> n >> q;
 
-    ll size = 1e9 + 1;
+    vector<vector<ll>> countries(n);
 
-    vector<p2> prefixSums(size, make_pair(0, 0));
-
-    for (ll i = 1; i <= n; i++){
+    for (ll i = 0; i < n; i++){
         ll c;
         cin >> c;
-        
-        vector<ll> ofEach(size);
+
+        countries[i] = vector<ll>(c);
 
         for (ll j = 0; j < c; j++){
             ll s;
             cin >> s;
 
-            ofEach[s]++;
+            countries[i][j] = s;
         }
 
-        ll sum = 0;
-        for (ll j = size - 1; j >= 0; j--){
-            sum += ofEach[j];
-            if(sum >= prefixSums[j].second){
-                prefixSums[j] = make_pair(i, sum);
-            }
-        }
+        sort(begin(countries[i]), end(countries[i]), greater<ll>());
     }
 
-    for (int i = 0; i < q; i++){
-        int a;
+    vector<ll> queries(q);
+    vector<ll> dQueries(q);
+
+    for (ll i = 0; i < q; i++)
+    {   
+        ll a;
         cin >> a;
+        queries[i] = a;
+        dQueries[i] = a;
+    }
 
-        if(prefixSums[a].first == 0 && prefixSums[a].second == 0){
-            cout << n << '\n';
-        }
-        else{
-            cout << prefixSums[a].first << '\n';
+    auto it = unique(all(dQueries));
+    dQueries.erase(it, dQueries.end());
+
+    sort(dQueries.begin(), dQueries.end(), [](ll a, ll b){
+        return a > b;
+    });
+
+    unordered_map<ll, ll> answers;
+    vector<ll> countryIslandCount(n);
+    ll highest = 0;
+    ll index = n - 1;
+
+    for (ll i = 0; i < dQueries.size(); i++){
+        ll a = dQueries[i];
+        for (ll j = 0; j < n; j++){
+            while(true){
+                if(countryIslandCount[j] < countries[j].size() && countries[j][countryIslandCount[j]] >= a){
+                    countryIslandCount[j]++;
+                }
+                else{
+                    break;
+                }
+            }
+
+            if(countryIslandCount[j] >= highest){
+                highest = countryIslandCount[j];
+                index = j;
+            }
         }
 
+        answers[a] = index + 1;
+    }
+
+    for (ll i = 0; i < q; i++){
+        cout << answers[queries[i]] << '\n';
     }
 }
