@@ -1,3 +1,7 @@
+// #pragma GCC optimize("O3")
+// #pragma GCC target("avx2")
+
+#include "bits/allocator.h"
 #include "bits/stdc++.h"
 
 using namespace std;
@@ -15,17 +19,21 @@ int main() {
 
     cin >> n >> q;
 
-    for (i = 0; i < n; i++)
-    {
-        sharePrice;
-        cin >> sharePrice;
+    vector<double> sharePrices(n);
 
+    for (i = 0; i < n; ++i){
+        cin >> sharePrice;
+        sharePrices[i] = sharePrice;
+    }
+
+    for (i = 0; i < n; ++i)
+    {
         curMoney = maxMoney;
         curShares = maxShares;
 
         //When having money
-        maxShares = max((curMoney - q) / sharePrice, maxShares);
-        maxMoney = max(curShares * sharePrice - q, maxMoney);
+        maxShares = max((curMoney - q) / sharePrices[i], maxShares);
+        maxMoney = max(curShares * sharePrices[i] - q, maxMoney);
     }
     
     cout << maxMoney;
