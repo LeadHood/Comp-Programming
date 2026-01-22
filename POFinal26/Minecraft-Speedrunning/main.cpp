@@ -1,8 +1,8 @@
 /*
 Status:
 ---------
-Complete: false
-Points: 0
+Complete: true
+Points: 100
 */
 
 #include "bits/stdc++.h"
